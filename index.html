@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For Keitumetse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:        #FDFBF9;
+      --surface:   #FFFFFF;
+      --surface2:  #F7F4FA;
+      --charcoal:  #1A1625;
+      --muted:     #6D6780;
+      --border:    rgba(255, 0, 85, 0.15);
+      --lav:       #C9BEE0;
+      --lav-deep:  #9B8BBE;
+      
+      /* Vibrant Neons */
+      --pink:      #FF0055;
+      --pink-soft: #FF3377;
+      --neon-red:  #FF0022;
+      
+      --pink-glow: rgba(255, 0, 85, 0.4);
+      --red-glow:  rgba(255, 0, 34, 0.5);
+      --white:     #FFFFFF;
+      --transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    
+    [data-theme="dark"] {
+      --bg:       #0A0710;
+      --surface:  #120D1D;
+      --surface2: #1A1329;
+      --charcoal: #F4F0F8;
+      --muted:    #A39CBF;
+      --border:   rgba(255, 0, 85, 0.25);
+      --lav:      #7B6FAE;
+      --lav-deep: #C4B8E8;
+      --white:    #FFFFFF;
+      --pink-glow: rgba(255, 0, 85, 0.6);
+      --red-glow:  rgba(255, 0, 34, 0.7);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--charcoal);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      transition: var(--transition);
+    }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      position: fixed; top: 1.2rem; right: 1.2rem; z-index: 100;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.5rem 1.2rem;
+      cursor: pointer; display: flex; align-items: center; gap: 0.6rem;
+      font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--pink);
+      box-shadow: 0 0 15px rgba(255, 0, 85, 0.15);
+      transition: var(--transition), transform 0.2s ease;
+    }
+    .theme-toggle:hover { 
+      transform: scale(1.05); 
+      box-shadow: 0 0 20px var(--pink-glow);
+    }
+    .toggle-icon { font-size: 1rem; }
+
+    /* ── PETALS ── */
+    .petals-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .petal {
+      position: absolute; top: -40px; opacity: 0;
+      animation: fall linear infinite;
+      pointer-events: none; user-select: none; line-height: 1;
+      text-shadow: 0 0 8px var(--pink-glow);
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.5; }
+      100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 100vh; z-index: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 2rem;
+    }
+    .hero-badge {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--pink);
+      background: rgba(255, 0, 85, 0.08);
+      border: 1px solid var(--pink-glow);
+      padding: 0.5rem 1.5rem; border-radius: 100px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 15px var(--pink-glow);
+      animation: fadeUp 1s ease 0.2s both;
+    }
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4.5rem, 15vw, 11rem);
+      font-weight: 700; line-height: 0.85;
+      text-align: center; color: var(--charcoal);
+      animation: fadeUp 1.2s ease 0.35s both;
+      text-shadow: 0 0 30px rgba(255, 0, 85, 0.15);
+    }
+    .hero-name span {
+      display: block; font-style: italic; font-weight: 500;
+      background: linear-gradient(125deg, var(--pink) 0%, var(--pink-soft) 55%, var(--lav-deep) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      color: var(--muted); margin-top: 2rem; text-align: center;
+      animation: fadeUp 1.2s ease 0.55s both; letter-spacing: 0.02em;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      animation: fadeUp 1s ease 1.2s both;
+      color: var(--pink); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 2px; height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--pink));
+      box-shadow: 0 0 10px var(--pink-glow);
+      animation: grow 2.2s ease-in-out infinite;
+    }
+    @keyframes grow {
+      0%,100% { transform: scaleY(1); opacity: 0.4; }
+      50%      { transform: scaleY(1.35); opacity: 1; }
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative; z-index: 1;
+      padding: 6rem 1.5rem; max-width: 880px; margin: 0 auto;
+    }
+    .section-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 0.9rem;
+      text-shadow: 0 0 10px var(--pink-glow);
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .section-label.visible { opacity: 1; transform: translateY(0); }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 6.5vw, 4.2rem);
+      font-weight: 700; line-height: 1.05; color: var(--charcoal);
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+    }
+    .section-title.visible { opacity: 1; transform: translateY(0); }
+    .section-title em {
+      font-style: italic; font-weight: 500;
+      background: linear-gradient(125deg, var(--pink), var(--pink-soft));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── LETTER ── */
+    .letter-wrap {
+      margin-top: 3rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 24px;
+      padding: clamp(2rem, 6vw, 4rem);
+      box-shadow: 0 10px 40px rgba(255, 0, 85, 0.08);
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.9s ease 0.25s, transform 0.9s ease 0.25s;
+    }
+    .letter-wrap.visible { opacity: 1; transform: translateY(0); }
+    .letter-wrap p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+      line-height: 1.9; color: var(--muted);
+      font-style: italic; font-weight: 300;
+    }
+    .letter-wrap p strong {
+      color: var(--pink); font-style: normal; font-weight: 700;
+      text-shadow: 0 0 8px rgba(255, 0, 85, 0.3);
+    }
+    .letter-wrap p + p { margin-top: 1.5em; }
+    .letter-sig {
+      margin-top: 2.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--pink); font-style: normal; letter-spacing: 0.04em;
+    }
+
+    /* ── LITTLE THINGS ── */
+    .things-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .thing-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      opacity: 0; transform: translateY(26px);
+      transition: opacity 0.6s ease, transform 0.6s ease,
+                  box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .thing-card.visible { opacity: 1; transform: translateY(0); }
+    .thing-card:hover {
+      border-color: var(--pink);
+      box-shadow: 0 10px 30px var(--pink-glow), 0 0 0 1px var(--pink);
+      transform: translateY(-5px);
+    }
+    .card-dot { 
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; 
+      box-shadow: 0 0 15px var(--pink-glow);
+    }
+    .dot-a { background: linear-gradient(135deg, var(--pink), var(--pink-soft)); }
+    .dot-b { background: linear-gradient(135deg, var(--pink-soft), var(--lav-deep)); }
+    .dot-c { background: linear-gradient(135deg, var(--neon-red), var(--pink)); }
+    .dot-d { background: linear-gradient(135deg, var(--pink), var(--lav-deep)); }
+    .thing-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 700; color: var(--charcoal);
+    }
+    .thing-text {
+      font-size: 0.9rem; line-height: 1.75; color: var(--muted); font-weight: 400;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline { margin-top: 3rem; position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 0; top: 8px; bottom: 8px; width: 2px;
+      background: linear-gradient(to bottom, var(--pink), var(--pink-soft), var(--neon-red));
+      box-shadow: 0 0 10px var(--pink-glow);
+    }
+    .timeline-item {
+      position: relative; padding-bottom: 3rem; padding-left: 1.5rem;
+      opacity: 0; transform: translateX(-18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .timeline-item.visible { opacity: 1; transform: translateX(0); }
+    .timeline-item::before {
+      content: ''; position: absolute;
+      left: -2.4rem; top: 5px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--pink);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--pink), 0 0 15px var(--pink-glow);
+    }
+    .timeline-date {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 0.5rem;
+      text-shadow: 0 0 8px rgba(255, 0, 85, 0.4);
+    }
+    .timeline-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-style: italic; font-weight: 300;
+      color: var(--charcoal); line-height: 1.7;
+    }
+    .timeline-text strong {
+      font-weight: 700; color: var(--pink); font-style: normal;
+    }
+
+    /* ── TIME COUNTER ── */
+    .time-wrap {
+      margin-top: 3rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 24px;
+      padding: clamp(2rem, 6vw, 3.5rem); text-align: center;
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+    }
+    .time-wrap.visible {
+      opacity: 1; transform: translateY(0);
+      animation: neonPulse 4s ease-in-out infinite;
+    }
+    @keyframes neonPulse {
+      0%,100% { box-shadow: 0 0 20px rgba(255, 0, 85, 0.15), 0 0 40px rgba(255, 0, 85, 0.05); }
+      50%      { box-shadow: 0 0 35px rgba(255, 0, 85, 0.3), 0 0 80px rgba(255, 0, 85, 0.15); }
+    }
+    .time-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1rem; margin-bottom: 2.5rem;
+    }
+    .time-block {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      padding: 1.2rem 0.5rem;
+      background: var(--surface2); border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .time-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
+      line-height: 1; color: var(--pink); text-align: center;
+      text-shadow: 0 0 15px var(--pink-glow);
+    }
+    .time-unit {
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .time-minutes-row {
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .minutes-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 0.8rem;
+    }
+    .minutes-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 8vw, 4.5rem); font-weight: 700;
+      background: linear-gradient(125deg, var(--neon-red) 0%, var(--pink) 50%, var(--pink-soft) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.1;
+      text-shadow: 0 0 20px var(--pink-glow);
+    }
+    .minutes-caption {
+      margin-top: 1rem;
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.25rem); color: var(--muted); line-height: 1.7;
+    }
+
+    /* ── REACH OUT ── */
+    .reach-section {
+      position: relative; z-index: 1;
+      text-align: center; padding: 4rem 1.5rem 8rem;
+    }
+    .reach-wrap {
+      max-width: 650px; margin: 0 auto;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reach-wrap.visible { opacity: 1; transform: translateY(0); }
+    .reach-card {
+      background: var(--surface);
+      border: 2px solid var(--border); border-radius: 28px;
+      padding: clamp(2.5rem, 6vw, 4rem);
+      transition: box-shadow 0.5s ease, border-color 0.5s ease;
+    }
+    .reach-card.hover-glow {
+      border-color: var(--pink);
+      box-shadow: 0 0 40px var(--pink-glow), 0 0 80px rgba(255, 0, 85, 0.15);
+    }
+    
+    /* Neon State: YES (Pink) */
+    .reach-card.yes-glow {
+      border-color: var(--pink);
+      animation: purePinkNeon 2s ease-in-out infinite;
+    }
+    @keyframes purePinkNeon {
+      0%,100% { box-shadow: 0 0 30px rgba(255, 0, 85, 0.4), 0 0 60px rgba(255, 0, 85, 0.2); }
+      50%      { box-shadow: 0 0 60px rgba(255, 0, 85, 0.7), 0 0 120px rgba(255, 0, 85, 0.4); }
+    }
+    
+    /* Neon State: NO (Red) */
+    .reach-card.no-glow {
+      border-color: var(--neon-red);
+      animation: pureRedNeon 2s ease-in-out infinite;
+    }
+    @keyframes pureRedNeon {
+      0%,100% { box-shadow: 0 0 30px rgba(255, 0, 34, 0.4), 0 0 60px rgba(255, 0, 34, 0.2); }
+      50%      { box-shadow: 0 0 60px rgba(255, 0, 34, 0.7), 0 0 120px rgba(255, 0, 34, 0.4); }
+    }
+
+    .reach-prompt {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      color: var(--muted); margin-bottom: 2.5rem; line-height: 1.85;
+    }
+    .reach-prompt strong { 
+      color: var(--charcoal); font-style: normal; font-weight: 700;
+    }
+    
+    .reach-choices {
+      display: flex; gap: 1rem; justify-content: center;
+      flex-wrap: wrap; transition: opacity 0.4s ease;
+    }
+    .reach-btn {
+      font-family: 'Jost', sans-serif; font-size: 0.75rem;
+      letter-spacing: 0.25em; text-transform: uppercase; font-weight: 600;
+      border: none; border-radius: 100px;
+      padding: 1rem 2.2rem; cursor: pointer;
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s ease, background 0.3s ease;
+    }
+    .reach-btn-yes {
+      color: #FFF;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--pink-soft) 100%);
+      box-shadow: 0 5px 25px var(--pink-glow);
+    }
+    .reach-btn-yes:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 35px rgba(255, 0, 85, 0.6);
+    }
+    .reach-btn-not-yet {
+      color: var(--charcoal); background: var(--surface2);
+      border: 1px solid var(--border);
+    }
+    .reach-btn-not-yet:hover { 
+      transform: scale(1.05); 
+      border-color: var(--neon-red);
+      color: var(--neon-red);
+      box-shadow: 0 0 20px var(--red-glow);
+    }
+    .reach-btn:active { transform: scale(0.96); }
+    
+    .reach-response {
+      margin-top: 2rem;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
+      font-size: clamp(1.3rem, 3vw, 1.6rem); line-height: 1.6;
+      opacity: 0; transform: translateY(15px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reach-response.show { opacity: 1; transform: translateY(0); }
+    .reach-response.resp-yes { 
+      color: var(--pink); 
+      text-shadow: 0 0 15px var(--pink-glow);
+    }
+    .reach-response.resp-no  { 
+      color: var(--neon-red); 
+      text-shadow: 0 0 15px var(--red-glow);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1; text-align: center; padding: 3rem 2rem;
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.6;
+    }
+
+    /* ── UTILS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 600px) {
+      .things-grid { grid-template-columns: 1fr; }
+      .time-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- THEME TOGGLE -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+    <span class="toggle-icon" id="themeIcon">&#9728;</span>
+    <span id="themeLabel">light</span>
+  </button>
+
+  <div class="petals-canvas" id="petals"></div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">a little something for you</div>
+    <h1 class="hero-name">Keitu<span>metse</span></h1>
+    <p class="hero-sub">hey, it's your lovely bear.</p>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </div>
+
+  <!-- LETTER -->
+  <section id="letter">
+    <div class="section-label reveal">a letter</div>
+    <h2 class="section-title reveal">From my heart<br/>to <em>yours.</em></h2>
+    <div class="letter-wrap reveal">
+      <p>Keitu, my love. I am not going to stand here and pretend everything has been perfect. I know it has not been. I know I have made it hard for you to open up, and I own that <strong>fully.</strong></p>
+      <p>I made mistakes. <strong>Real ones.</strong> And I am not writing this to gloss over them or to ask you to forget. I am writing this because I see them, and more than that, I see you. I see what I almost let slip through my hands.</p>
+      <p>I am not going anywhere. I am not done. I want to see this through with you properly, the way you deserve, and I am willing to put in the work every single day to get us there. <strong>It is not the same without you.</strong> Nothing feels right without you in it.</p>
+      <p>I love you, Keitu. That part has never been complicated. I love you and <strong>I am choosing you</strong>, today and every day after this.</p>
+      <div class="letter-sig">Yours always, your bear</div>
+    </div>
+  </section>
+
+  <!-- LITTLE THINGS -->
+  <section id="little-things">
+    <h2 class="section-title reveal">The little things<br/>that live in <em>me.</em></h2>
+    <div class="things-grid">
+      <div class="thing-card reveal" style="transition-delay:0.08s">
+        <div class="card-dot dot-a"></div>
+        <div class="thing-title">Your presence</div>
+        <div class="thing-text">Being around you feels like exactly where I am supposed to be. Always.</div>
+      </div>
+      <div class="thing-card reveal" style="transition-delay:0.14s">
+        <div class="card-dot dot-b"></div>
+        <div class="thing-title">Your smile</div>
+        <div class="thing-text">The kind that stops me mid-sentence every time. I never get used to it.</div>
+      </div>
+      <div class="thing-card reveal" style="transition-delay:0.2s">
+        <div class="card-dot dot-c"></div>
+        <div class="thing-title">Your strength</div>
+        <div class="thing-text">You carry more than most would, and you do it with a quiet grace that takes my breath away.</div>
+      </div>
+      <div class="thing-card reveal" style="transition-delay:0.26s">
+        <div class="card-dot dot-d"></div>
+        <div class="thing-title">The way you carry yourself</div>
+        <div class="thing-text">There is something about you, the way you move through the world, that I can never stop noticing.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR STORY -->
+  <section id="us">
+    <div class="section-label reveal">our story</div>
+    <h2 class="section-title reveal">Moments I<br/><em>hold close.</em></h2>
+    <div class="timeline">
+      <div class="timeline-item reveal" style="transition-delay:0.05s">
+        <div class="timeline-date">2020</div>
+        <div class="timeline-text">Before any labels, before anything official. That is when I first knew there was <strong>something about you</strong> I could not ignore.</div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.12s">
+        <div class="timeline-date">6 September 2024</div>
+        <div class="timeline-text">The day it became official. The day I got to call you <strong>mine.</strong> One of the best decisions of my life.</div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.2s">
+        <div class="timeline-date">The hard times</div>
+        <div class="timeline-text">We bent. But we are still here, and that means <strong>everything</strong> to me.</div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.28s">
+        <div class="timeline-date">Every quiet moment</div>
+        <div class="timeline-text">The ordinary ones. Those are the ones I treasure most. When it is just us and the world is calm.</div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.36s">
+        <div class="timeline-date">Right now</div>
+        <div class="timeline-text">Today, I am choosing you again. <strong>Fully.</strong> And I will keep choosing you.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIME TOGETHER -->
+  <section id="time-together">
+    <div class="section-label reveal">since 6 september 2024</div>
+    <h2 class="section-title reveal">Every minute<br/>with you <em>counts.</em></h2>
+    <div class="time-wrap reveal">
+      <div class="time-grid">
+        <div class="time-block">
+          <span class="time-number" id="t-years">0</span>
+          <span class="time-unit">years</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="t-months">0</span>
+          <span class="time-unit">months</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="t-days">0</span>
+          <span class="time-unit">days</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="t-hours">0</span>
+          <span class="time-unit">hours</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="t-mins">0</span>
+          <span class="time-unit">minutes</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="t-secs">0</span>
+          <span class="time-unit">seconds</span>
+        </div>
+      </div>
+      <div class="time-minutes-row">
+        <div class="minutes-label">total minutes together</div>
+        <div class="minutes-number" id="t-minutes">0</div>
+        <div class="minutes-caption">minutes of you, and not one of them wasted.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REACH OUT -->
+  <div class="reach-section" id="reach-sec">
+    <div class="reach-wrap reveal">
+      <div class="reach-card" id="reachCard">
+        <p class="reach-prompt">
+          There is still so much of our story left to write.<br/>
+          Whenever you are ready to take that step, <strong>I am here.</strong>
+        </p>
+        <div class="reach-choices" id="reachChoices">
+          <button class="reach-btn reach-btn-yes" onclick="handleReach('yes')">I want to talk</button>
+          <button class="reach-btn reach-btn-not-yet" onclick="handleReach('notyet')">Not yet</button>
+        </div>
+        <p class="reach-response" id="reachResp"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer>made with love, just for you &middot; Keitumetse</footer>
+
+<script>
+  /* ── THEME ── */
+  function toggleTheme() {
+    const html  = document.documentElement;
+    const isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    document.getElementById('themeIcon').innerHTML  = isDark ? '&#9790;' : '&#9728;';
+    document.getElementById('themeLabel').textContent = isDark ? 'dark' : 'light';
+  }
+
+  /* ── HEARTS ── */
+  const hearts     = ['\u2665','\u2665','\u2661','\u2665','\u2661'];
+  const heartCols  = ['#FF0055','#FF3377','#FF0022','#C9BEE0','#F2B8BB','#FF0055'];
+  const canvas     = document.getElementById('petals');
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const size = 14 + Math.random() * 20;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      font-size:${size}px;
+      color:${heartCols[Math.floor(Math.random()*heartCols.length)]};
+      animation-duration:${10+Math.random()*15}s;
+      animation-delay:${Math.random()*15}s;
+    `;
+    p.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    canvas.appendChild(p);
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── REACH OUT LOGIC ── */
+  const card = document.getElementById('reachCard');
+
+  card.addEventListener('mouseenter', () => { if (!card.dataset.answered) card.classList.add('hover-glow'); });
+  card.addEventListener('mouseleave', () => { if (!card.dataset.answered) card.classList.remove('hover-glow'); });
+  card.addEventListener('touchstart', () => { if (!card.dataset.answered) card.classList.add('hover-glow'); }, { passive: true });
+  card.addEventListener('touchend',   () => { setTimeout(() => { if (!card.dataset.answered) card.classList.remove('hover-glow'); }, 600); });
+
+  const yesPool = [
+    "I knew you'd make the right decision. I am right here.",
+    "I knew your heart would choose us. Let's fix this together.",
+    "That is exactly what I was hoping for. I'm ready when you are."
+  ];
+  const noPool = [
+    "Take all the time you need, but please, choose what's best for us.",
+    "I hear you. Just remember to choose what is best for our future.",
+    "Okay. I will wait, but I hope you choose what is best for us."
+  ];
+
+  function handleReach(choice) {
+    if (card.dataset.answered) return;
+    card.dataset.answered = 'true';
+
+    const choices = document.getElementById('reachChoices');
+    const resp    = document.getElementById('reachResp');
+
+    choices.style.opacity = '0.2';
+    choices.style.pointerEvents = 'none';
+    card.classList.remove('hover-glow');
+
+    if (choice === 'yes') {
+      card.classList.add('yes-glow');
+      resp.className = 'reach-response resp-yes';
+      resp.textContent = yesPool[Math.floor(Math.random()*yesPool.length)];
+    } else {
+      card.classList.add('no-glow');
+      resp.className = 'reach-response resp-no';
+      resp.textContent = noPool[Math.floor(Math.random()*noPool.length)];
+    }
+
+    void resp.offsetWidth;
+    resp.classList.add('show');
+  }
+
+  /* ── TIMER ── */
+  function updateTimer() {
+    const start  = new Date('2024-09-06T00:00:00');
+    const now    = new Date();
+    
+    // Core differences
+    let y  = now.getFullYear()  - start.getFullYear();
+    let mo = now.getMonth()     - start.getMonth();
+    let d  = now.getDate()      - start.getDate();
+    let h  = now.getHours()     - start.getHours();
+    let m  = now.getMinutes()   - start.getMinutes();
+    let s  = now.getSeconds()   - start.getSeconds();
+
+    // Carry-over calculations
+    if (s  < 0) { s  += 60; m--; }
+    if (m  < 0) { m  += 60; h--; }
+    if (h  < 0) { h  += 24; d--; }
+    if (d  < 0) { 
+      let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+      d += prevMonth.getDate(); 
+      mo--; 
+    }
+    if (mo < 0) { mo += 12; y--; }
+
+    // Total absolute minutes
+    const diffMs = now - start;
+    const totalMins = Math.floor(diffMs / 60000);
+
+    // Update DOM
+    document.getElementById('t-years').textContent   = y;
+    document.getElementById('t-months').textContent  = mo;
+    document.getElementById('t-days').textContent    = d;
+    document.getElementById('t-hours').textContent   = h;
+    document.getElementById('t-mins').textContent    = m;
+    document.getElementById('t-secs').textContent    = s;
+    
+    document.getElementById('t-minutes').textContent = totalMins.toLocaleString();
+  }
+  
+  // Run immediately, then interval every 1 second (1000ms)
+  updateTimer();
+  setInterval(updateTimer, 1000);
+</script>
+</body>
+</html>
